@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("FingerjetHelper")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+978f50dbdd37b473a24617effc78b737d59265d7")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+0ea9f23dadfa244abb8d38d842fd79bb92abb4bb")]
 [assembly: System.Reflection.AssemblyProductAttribute("FingerjetHelper")]
 [assembly: System.Reflection.AssemblyTitleAttribute("FingerjetHelper")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

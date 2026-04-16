@@ -3,6 +3,10 @@
   "WorkspaceRootPath": "C:\\Users\\jcarl\\OneDrive\\Desktop\\CAPSTONE\\FingerjetHelper\\",
   "Documents": [
     {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\jcarl\\OneDrive\\Desktop\\CAPSTONE\\FingerjetHelper\\.github\\workflows\\docker-build.yml||{06C066C6-04A2-4E5D-8202-439FD4234EF1}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:.github\\workflows\\docker-build.yml||{06C066C6-04A2-4E5D-8202-439FD4234EF1}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{09A5E181-AAF7-C76C-713D-C5F5659D6409}|FingerjetHelper\\FingerjetHelper.csproj|c:\\users\\jcarl\\onedrive\\desktop\\capstone\\fingerjethelper\\fingerjethelper\\controllers\\matchcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{09A5E181-AAF7-C76C-713D-C5F5659D6409}|FingerjetHelper\\FingerjetHelper.csproj|solutionrelative:fingerjethelper\\controllers\\matchcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
@@ -13,6 +17,14 @@
     {
       "AbsoluteMoniker": "D:0:0:{09A5E181-AAF7-C76C-713D-C5F5659D6409}|FingerjetHelper\\FingerjetHelper.csproj|c:\\users\\jcarl\\onedrive\\desktop\\capstone\\fingerjethelper\\fingerjethelper\\fingerjethelper.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|",
       "RelativeMoniker": "D:0:0:{09A5E181-AAF7-C76C-713D-C5F5659D6409}|FingerjetHelper\\FingerjetHelper.csproj|solutionrelative:fingerjethelper\\fingerjethelper.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\jcarl\\OneDrive\\Desktop\\CAPSTONE\\FingerjetHelper\\Dockerfile||{8B382828-6202-11D1-8870-0000F87579D2}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Dockerfile||{8B382828-6202-11D1-8870-0000F87579D2}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\jcarl\\OneDrive\\Desktop\\CAPSTONE\\FingerjetHelper\\.dockerignore||{3B902123-F8A7-4915-9F01-361F908088D0}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:.dockerignore||{3B902123-F8A7-4915-9F01-361F908088D0}"
     }
   ],
   "DocumentGroupContainers": [
@@ -22,11 +34,48 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 1,
+          "SelectedChildIndex": 0,
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 0,
+              "Title": "docker-build.yml",
+              "DocumentMoniker": "C:\\Users\\jcarl\\OneDrive\\Desktop\\CAPSTONE\\FingerjetHelper\\.github\\workflows\\docker-build.yml",
+              "RelativeDocumentMoniker": ".github\\workflows\\docker-build.yml",
+              "ToolTip": "C:\\Users\\jcarl\\OneDrive\\Desktop\\CAPSTONE\\FingerjetHelper\\.github\\workflows\\docker-build.yml",
+              "RelativeToolTip": ".github\\workflows\\docker-build.yml",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003775|",
+              "WhenOpened": "2026-04-16T03:15:59.451Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": ".dockerignore",
+              "DocumentMoniker": "C:\\Users\\jcarl\\OneDrive\\Desktop\\CAPSTONE\\FingerjetHelper\\.dockerignore",
+              "RelativeDocumentMoniker": ".dockerignore",
+              "ToolTip": "C:\\Users\\jcarl\\OneDrive\\Desktop\\CAPSTONE\\FingerjetHelper\\.dockerignore",
+              "RelativeToolTip": ".dockerignore",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAoAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001001|",
+              "WhenOpened": "2026-04-16T03:15:52.134Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "Dockerfile",
+              "DocumentMoniker": "C:\\Users\\jcarl\\OneDrive\\Desktop\\CAPSTONE\\FingerjetHelper\\Dockerfile",
+              "RelativeDocumentMoniker": "Dockerfile",
+              "ToolTip": "C:\\Users\\jcarl\\OneDrive\\Desktop\\CAPSTONE\\FingerjetHelper\\Dockerfile",
+              "RelativeToolTip": "Dockerfile",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABMAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001001|",
+              "WhenOpened": "2026-04-16T03:15:46.014Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
               "Title": "Program.cs",
               "DocumentMoniker": "C:\\Users\\jcarl\\OneDrive\\Desktop\\CAPSTONE\\FingerjetHelper\\FingerjetHelper\\Program.cs",
               "RelativeDocumentMoniker": "FingerjetHelper\\Program.cs",
@@ -38,7 +87,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 1,
               "Title": "MatchController.cs",
               "DocumentMoniker": "C:\\Users\\jcarl\\OneDrive\\Desktop\\CAPSTONE\\FingerjetHelper\\FingerjetHelper\\Controllers\\MatchController.cs",
               "RelativeDocumentMoniker": "FingerjetHelper\\Controllers\\MatchController.cs",
@@ -46,12 +95,11 @@
               "RelativeToolTip": "FingerjetHelper\\Controllers\\MatchController.cs",
               "ViewState": "AgIAACcAAAAAAAAAAAAIwNEAAABEAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-03-03T07:20:11.676Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-03-03T07:20:11.676Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 3,
               "Title": "FingerjetHelper.csproj",
               "DocumentMoniker": "C:\\Users\\jcarl\\OneDrive\\Desktop\\CAPSTONE\\FingerjetHelper\\FingerjetHelper\\FingerjetHelper.csproj",
               "RelativeDocumentMoniker": "FingerjetHelper\\FingerjetHelper.csproj",

@@ -32,7 +32,6 @@ namespace FingerjetHelper
                 return System.Threading.Tasks.Task.CompletedTask;
             });
 
-            app.UseHttpsRedirection();
 
             app.UseAuthorization();
 

@@ -1,0 +1,122 @@
+﻿using Microsoft.AspNetCore.Mvc;
+using SourceAFIS;
+using System.Drawing;
+
+namespace FingerjetHelper.Controllers
+{
+    [ApiController]
+    [Route("[controller]")]
+    public class MatchController : ControllerBase
+    {
+        public class VerifyRequest
+        {
+            // Two fingerprint images as base64 strings (PNG/JPEG, may be plain base64 or data URLs)
+            public string ProbeImageBase64 { get; set; } = string.Empty;
+            public string ReferenceImageBase64 { get; set; } = string.Empty;
+        }
+
+        [HttpPost("verify")]
+        public IActionResult Verify([FromBody] VerifyRequest request)
+        {
+            if (string.IsNullOrWhiteSpace(request.ProbeImageBase64) ||
+        string.IsNullOrWhiteSpace(request.ReferenceImageBase64))
+            {
+                return BadRequest(new { match = false, score = 0, message = "Missing images" });
+            }
+
+            Console.WriteLine($"[Match/verify] received probe length = {request.ProbeImageBase64.Length}, " +
+                              $"reference length = {request.ReferenceImageBase64.Length}");
+
+            try
+            {
+                // Decode base64 (optionally data URL) into Bitmap
+                static Bitmap Decode(string base64)
+                {
+                    if (string.IsNullOrWhiteSpace(base64))
+                        throw new ArgumentException("Empty base64");
+
+                    // Strip possible JSON/console artifacts
+                    base64 = base64.Trim();
+
+                    // If it came in with extra quotes, remove them
+                    if (base64.StartsWith("\"") && base64.EndsWith("\"") && base64.Length > 2)
+                        base64 = base64.Substring(1, base64.Length - 2);
+
+                    // Strip whitespace/newlines
+                    base64 = base64
+                        .Replace("\r", string.Empty)
+                        .Replace("\n", string.Empty)
+                        .Replace(" ", string.Empty);
+
+                    if (base64.StartsWith("data:", StringComparison.OrdinalIgnoreCase))
+                    {
+                        var parts = base64.Split(',', 2);
+                        base64 = parts.Length == 2 ? parts[1] : base64;
+                    }
+
+                    var bytes = Convert.FromBase64String(base64);
+                    using var ms = new MemoryStream(bytes);
+                    return new Bitmap(ms);
+                }
+
+                // Convert Bitmap to grayscale byte array for SourceAFIS
+                static byte[] ToGrayscaleBytes(Bitmap bmp)
+                {
+                    var pixels = new byte[bmp.Width * bmp.Height];
+
+                    for (int y = 0; y < bmp.Height; y++)
+                    {
+                        for (int x = 0; x < bmp.Width; x++)
+                        {
+                            var color = bmp.GetPixel(x, y);
+                            // standard luminance formula
+                            var gray = (byte)(0.299 * color.R + 0.587 * color.G + 0.114 * color.B);
+                            pixels[y * bmp.Width + x] = gray;
+                        }
+                    }
+
+                    return pixels;
+                }
+
+                using var probeBmp = Decode(request.ProbeImageBase64);
+                using var refBmp = Decode(request.ReferenceImageBase64);
+
+                var options = new FingerprintImageOptions { Dpi = 500 }; // adjust if your reader uses a different DPI
+
+                var probeImage = new FingerprintImage(
+                    probeBmp.Width,
+                    probeBmp.Height,
+                    ToGrayscaleBytes(probeBmp),
+                    options
+                );
+                var refImage = new FingerprintImage(
+                    refBmp.Width,
+                    refBmp.Height,
+                    ToGrayscaleBytes(refBmp),
+                    options
+                );
+
+                var probeTemplate = new FingerprintTemplate(probeImage);
+                var referenceTemplate = new FingerprintTemplate(refImage);
+
+                var matcher = new FingerprintMatcher(probeTemplate);
+                double score = matcher.Match(referenceTemplate);
+
+                // Log score for tuning
+                Console.WriteLine($"[Match/verify] score = {score}");
+
+                // TEMP threshold for testing; we will tune this based on real scores
+                const double threshold = 10.0;
+                bool match = score >= threshold;
+
+
+
+                return Ok(new { match, score });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { match = false, score = 0, error = ex.Message });
+            }
+        }
+    }
+}

@@ -1,0 +1,246 @@
+﻿using Microsoft.AspNetCore.Mvc;
+using SourceAFIS;
+using System.Drawing;
+using System.Drawing.Imaging;
+using System.IO;
+using System.Runtime.InteropServices;
+using System.Text.RegularExpressions;
+
+namespace FingerjetHelper.Controllers
+{
+    [ApiController]
+    [Route("[controller]")]
+    public class MatchController : ControllerBase
+    {
+        public class VerifyRequest
+        {
+            // Two fingerprint images as base64 strings (PNG/JPEG, may be plain base64 or data URLs)
+            public string ProbeImageBase64 { get; set; } = string.Empty;
+            public string ReferenceImageBase64 { get; set; } = string.Empty;
+            // Optional matching threshold override. If null, default threshold is used.
+            public double? Threshold { get; set; }
+            // If true, force inversion; if false, force no inversion; if null, auto-detect.
+            public bool? AutoInvert { get; set; }
+        }
+
+        /// <summary>
+        /// Decode base64 (optionally data URL) into a Bitmap that does not depend on the source stream.
+        /// We create a temporary Bitmap from the stream then clone it so we can dispose the stream safely.
+        /// </summary>
+        private static Bitmap DecodeBase64ToBitmap(string base64)
+        {
+            if (string.IsNullOrWhiteSpace(base64))
+                throw new ArgumentException("Empty base64");
+
+            base64 = base64.Trim();
+
+            if (base64.StartsWith("\"") && base64.EndsWith("\"") && base64.Length > 2)
+                base64 = base64.Substring(1, base64.Length - 2);
+
+            // remove whitespace
+            base64 = Regex.Replace(base64, "\\s+", "");
+
+            if (base64.StartsWith("data:", StringComparison.OrdinalIgnoreCase))
+            {
+                var parts = base64.Split(',', 2);
+                base64 = parts.Length == 2 ? parts[1] : base64;
+            }
+
+            var bytes = Convert.FromBase64String(base64);
+            using var ms = new MemoryStream(bytes);
+            using var tmp = new Bitmap(ms);
+            // Clone so the returned bitmap doesn't keep the stream alive
+            return new Bitmap(tmp);
+        }
+
+        /// <summary>
+        /// Convert a color Bitmap to a SourceAFIS-compatible grayscale byte array using LockBits for performance.
+        /// </summary>
+        private static byte[] ToGrayscaleBytes(Bitmap bmp)
+        {
+            int width = bmp.Width;
+            int height = bmp.Height;
+            var pixels = new byte[width * height];
+
+            // Fast path: if image is already 8bpp grayscale, copy scanlines directly.
+            if (bmp.PixelFormat == PixelFormat.Format8bppIndexed)
+            {
+                var rect = new Rectangle(0, 0, width, height);
+                var data = bmp.LockBits(rect, ImageLockMode.ReadOnly, PixelFormat.Format8bppIndexed);
+                try
+                {
+                    int stride = Math.Abs(data.Stride);
+                    int bytes = stride * height;
+                    var raw = new byte[bytes];
+                    Marshal.Copy(data.Scan0, raw, 0, bytes);
+
+                    for (int y = 0; y < height; y++)
+                    {
+                        int srcRow = y * stride;
+                        int dstRow = y * width;
+                        Buffer.BlockCopy(raw, srcRow, pixels, dstRow, width);
+                    }
+                    return pixels;
+                }
+
+        /// <summary>
+        /// Heuristic to determine whether an image appears inverted (light ridges on dark background).
+        /// Returns true when inversion is recommended.
+        /// </summary>
+        private static bool ShouldInvert(byte[] pixels)
+        {
+            if (pixels == null || pixels.Length == 0)
+                return false;
+
+            int dark = 0;
+            int total = pixels.Length;
+            for (int i = 0; i < total; i++)
+            {
+                if (pixels[i] < 128) dark++;
+            }
+
+            double darkFraction = (double)dark / total;
+            // If relatively few dark pixels, image may be inverted (ridges light)
+            return darkFraction < 0.45;
+        }
+
+        private static void InvertPixels(byte[] pixels)
+        {
+            for (int i = 0; i < pixels.Length; i++)
+                pixels[i] = (byte)(255 - pixels[i]);
+        }
+                finally
+                {
+                    bmp.UnlockBits(data);
+                }
+            }
+
+            // Generic path: draw into 24bpp clone and convert.
+            using var clone = new Bitmap(width, height, PixelFormat.Format24bppRgb);
+            using (var g = Graphics.FromImage(clone))
+            {
+                g.DrawImage(bmp, 0, 0, width, height);
+            }
+
+            var rect24 = new Rectangle(0, 0, width, height);
+            var data24 = clone.LockBits(rect24, ImageLockMode.ReadOnly, PixelFormat.Format24bppRgb);
+            try
+            {
+                int stride = Math.Abs(data24.Stride);
+                int bytes = stride * height;
+                var rgbValues = new byte[bytes];
+                Marshal.Copy(data24.Scan0, rgbValues, 0, bytes);
+
+                for (int y = 0; y < height; y++)
+                {
+                    int row = y * stride;
+                    int outRow = y * width;
+                    for (int x = 0; x < width; x++)
+                    {
+                        int idx = row + x * 3; // B,G,R
+                        byte b = rgbValues[idx];
+                        byte g = rgbValues[idx + 1];
+                        byte r = rgbValues[idx + 2];
+                        // luminance
+                        byte gray = (byte)(0.299 * r + 0.587 * g + 0.114 * b);
+                        pixels[outRow + x] = gray;
+                    }
+                }
+            }
+            finally
+            {
+                clone.UnlockBits(data24);
+            }
+
+            return pixels;
+        }
+        [HttpPost("verify")]
+        public IActionResult Verify([FromBody] VerifyRequest request)
+        {
+            if (string.IsNullOrWhiteSpace(request.ProbeImageBase64) ||
+        string.IsNullOrWhiteSpace(request.ReferenceImageBase64))
+            {
+                return BadRequest(new { match = false, score = 0, message = "Missing images" });
+            }
+
+            Console.WriteLine($"[Match/verify] received probe length = {request.ProbeImageBase64.Length}, " +
+                              $"reference length = {request.ReferenceImageBase64.Length}");
+
+            try
+            {
+                // Note: decoding and grayscale conversion are handled by helper methods defined below.
+                // Small sanity limit on base64 length to avoid extremely large inputs (adjust as needed).
+                const int MaxBase64Length = 10_000_000; // ~10M chars
+                if (request.ProbeImageBase64.Length > MaxBase64Length || request.ReferenceImageBase64.Length > MaxBase64Length)
+                    return BadRequest(new { match = false, score = 0, message = "Image too large" });
+
+                using var probeBmp = DecodeBase64ToBitmap(request.ProbeImageBase64);
+                using var refBmp = DecodeBase64ToBitmap(request.ReferenceImageBase64);
+
+                var options = new FingerprintImageOptions { Dpi = 500 }; // adjust if your reader uses a different DPI
+
+                // Convert to grayscale byte arrays (fast paths for 8bpp)
+                var probePixels = ToGrayscaleBytes(probeBmp);
+                var refPixels = ToGrayscaleBytes(refBmp);
+
+                // Auto-invert detection/override
+                bool probeInvert;
+                bool refInvert;
+                if (request.AutoInvert.HasValue)
+                {
+                    probeInvert = refInvert = request.AutoInvert.Value;
+                }
+                else
+                {
+                    probeInvert = ShouldInvert(probePixels);
+                    refInvert = ShouldInvert(refPixels);
+                }
+
+                if (probeInvert)
+                {
+                    InvertPixels(probePixels);
+                    Console.WriteLine("[Match/verify] probe image inverted");
+                }
+                if (refInvert)
+                {
+                    InvertPixels(refPixels);
+                    Console.WriteLine("[Match/verify] reference image inverted");
+                }
+
+                var probeImage = new FingerprintImage(
+                    probeBmp.Width,
+                    probeBmp.Height,
+                    probePixels,
+                    options
+                );
+                var refImage = new FingerprintImage(
+                    refBmp.Width,
+                    refBmp.Height,
+                    refPixels,
+                    options
+                );
+
+                var probeTemplate = new FingerprintTemplate(probeImage);
+                var referenceTemplate = new FingerprintTemplate(refImage);
+
+                var matcher = new FingerprintMatcher(probeTemplate);
+                double score = matcher.Match(referenceTemplate);
+
+                // Log score for tuning
+                Console.WriteLine($"[Match/verify] score = {score}");
+
+                // TEMP threshold for testing; we will tune this based on real scores
+                const double threshold = 10.0;
+                bool match = score >= threshold;
+
+
+
+                return Ok(new { match, score });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { match = false, score = 0, error = ex.Message });
+            }
+        }
+    }
+}

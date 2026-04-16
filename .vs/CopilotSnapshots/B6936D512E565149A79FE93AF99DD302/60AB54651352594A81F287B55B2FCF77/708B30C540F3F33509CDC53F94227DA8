@@ -1,0 +1,83 @@
+﻿using Microsoft.AspNetCore.Mvc;
+using SourceAFIS;
+using System.Drawing;
+using System.Drawing.Imaging;
+using System.IO;
+using System.Runtime.InteropServices;
+using System.Text.RegularExpressions;
+
+namespace FingerjetHelper.Controllers
+{
+    [ApiController]
+    [Route("[controller]")]
+    public class MatchController : ControllerBase
+    {
+        public class VerifyRequest
+        {
+            // Two fingerprint images as base64 strings (PNG/JPEG, may be plain base64 or data URLs)
+            public string ProbeImageBase64 { get; set; } = string.Empty;
+            public string ReferenceImageBase64 { get; set; } = string.Empty;
+        }
+
+        [HttpPost("verify")]
+        public IActionResult Verify([FromBody] VerifyRequest request)
+        {
+            if (string.IsNullOrWhiteSpace(request.ProbeImageBase64) ||
+        string.IsNullOrWhiteSpace(request.ReferenceImageBase64))
+            {
+                return BadRequest(new { match = false, score = 0, message = "Missing images" });
+            }
+
+            Console.WriteLine($"[Match/verify] received probe length = {request.ProbeImageBase64.Length}, " +
+                              $"reference length = {request.ReferenceImageBase64.Length}");
+
+            try
+            {
+                // Note: decoding and grayscale conversion are handled by helper methods defined below.
+                // Small sanity limit on base64 length to avoid extremely large inputs (adjust as needed).
+                const int MaxBase64Length = 10_000_000; // ~10M chars
+                if (request.ProbeImageBase64.Length > MaxBase64Length || request.ReferenceImageBase64.Length > MaxBase64Length)
+                    return BadRequest(new { match = false, score = 0, message = "Image too large" });
+
+                using var probeBmp = DecodeBase64ToBitmap(request.ProbeImageBase64);
+                using var refBmp = DecodeBase64ToBitmap(request.ReferenceImageBase64);
+
+                var options = new FingerprintImageOptions { Dpi = 500 }; // adjust if your reader uses a different DPI
+
+                var probeImage = new FingerprintImage(
+                    probeBmp.Width,
+                    probeBmp.Height,
+                    ToGrayscaleBytes(probeBmp),
+                    options
+                );
+                var refImage = new FingerprintImage(
+                    refBmp.Width,
+                    refBmp.Height,
+                    ToGrayscaleBytes(refBmp),
+                    options
+                );
+
+                var probeTemplate = new FingerprintTemplate(probeImage);
+                var referenceTemplate = new FingerprintTemplate(refImage);
+
+                var matcher = new FingerprintMatcher(probeTemplate);
+                double score = matcher.Match(referenceTemplate);
+
+                // Log score for tuning
+                Console.WriteLine($"[Match/verify] score = {score}");
+
+                // TEMP threshold for testing; we will tune this based on real scores
+                const double threshold = 10.0;
+                bool match = score >= threshold;
+
+
+
+                return Ok(new { match, score });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { match = false, score = 0, error = ex.Message });
+            }
+        }
+    }
+}

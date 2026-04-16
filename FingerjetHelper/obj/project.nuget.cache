@@ -1,0 +1,106 @@
+{
+  "version": 2,
+  "dgSpecHash": "BVkAT9aJ1f8=",
+  "success": true,
+  "projectFilePath": "C:\\Users\\jcarl\\OneDrive\\Desktop\\CAPSTONE\\FingerjetHelper\\FingerjetHelper\\FingerjetHelper.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\jcarl\\.nuget\\packages\\dahomey.cbor\\1.16.1\\dahomey.cbor.1.16.1.nupkg.sha512",
+    "C:\\Users\\jcarl\\.nuget\\packages\\microsoft.aspnetcore.openapi\\10.0.3\\microsoft.aspnetcore.openapi.10.0.3.nupkg.sha512",
+    "C:\\Users\\jcarl\\.nuget\\packages\\microsoft.extensions.apidescription.server\\10.0.0\\microsoft.extensions.apidescription.server.10.0.0.nupkg.sha512",
+    "C:\\Users\\jcarl\\.nuget\\packages\\microsoft.openapi\\2.4.1\\microsoft.openapi.2.4.1.nupkg.sha512",
+    "C:\\Users\\jcarl\\.nuget\\packages\\microsoft.win32.systemevents\\10.0.3\\microsoft.win32.systemevents.10.0.3.nupkg.sha512",
+    "C:\\Users\\jcarl\\.nuget\\packages\\sixlabors.imagesharp\\2.1.3\\sixlabors.imagesharp.2.1.3.nupkg.sha512",
+    "C:\\Users\\jcarl\\.nuget\\packages\\sourceafis\\3.14.0\\sourceafis.3.14.0.nupkg.sha512",
+    "C:\\Users\\jcarl\\.nuget\\packages\\swashbuckle.aspnetcore\\10.1.4\\swashbuckle.aspnetcore.10.1.4.nupkg.sha512",
+    "C:\\Users\\jcarl\\.nuget\\packages\\swashbuckle.aspnetcore.swagger\\10.1.4\\swashbuckle.aspnetcore.swagger.10.1.4.nupkg.sha512",
+    "C:\\Users\\jcarl\\.nuget\\packages\\swashbuckle.aspnetcore.swaggergen\\10.1.4\\swashbuckle.aspnetcore.swaggergen.10.1.4.nupkg.sha512",
+    "C:\\Users\\jcarl\\.nuget\\packages\\swashbuckle.aspnetcore.swaggerui\\10.1.4\\swashbuckle.aspnetcore.swaggerui.10.1.4.nupkg.sha512",
+    "C:\\Users\\jcarl\\.nuget\\packages\\system.drawing.common\\10.0.3\\system.drawing.common.10.0.3.nupkg.sha512"
+  ],
+  "logs": [
+    {
+      "code": "NU1903",
+      "level": "Warning",
+      "message": "Package 'SixLabors.ImageSharp' 2.1.3 has a known high severity vulnerability, https://github.com/advisories/GHSA-2cmq-823j-5qj8",
+      "projectPath": "C:\\Users\\jcarl\\OneDrive\\Desktop\\CAPSTONE\\FingerjetHelper\\FingerjetHelper\\FingerjetHelper.csproj",
+      "warningLevel": 1,
+      "filePath": "C:\\Users\\jcarl\\OneDrive\\Desktop\\CAPSTONE\\FingerjetHelper\\FingerjetHelper\\FingerjetHelper.csproj",
+      "libraryId": "SixLabors.ImageSharp",
+      "targetGraphs": [
+        "net10.0"
+      ]
+    },
+    {
+      "code": "NU1902",
+      "level": "Warning",
+      "message": "Package 'SixLabors.ImageSharp' 2.1.3 has a known moderate severity vulnerability, https://github.com/advisories/GHSA-5x7m-6737-26cr",
+      "projectPath": "C:\\Users\\jcarl\\OneDrive\\Desktop\\CAPSTONE\\FingerjetHelper\\FingerjetHelper\\FingerjetHelper.csproj",
+      "warningLevel": 1,
+      "filePath": "C:\\Users\\jcarl\\OneDrive\\Desktop\\CAPSTONE\\FingerjetHelper\\FingerjetHelper\\FingerjetHelper.csproj",
+      "libraryId": "SixLabors.ImageSharp",
+      "targetGraphs": [
+        "net10.0"
+      ]
+    },
+    {
+      "code": "NU1903",
+      "level": "Warning",
+      "message": "Package 'SixLabors.ImageSharp' 2.1.3 has a known high severity vulnerability, https://github.com/advisories/GHSA-63p8-c4ww-9cg7",
+      "projectPath": "C:\\Users\\jcarl\\OneDrive\\Desktop\\CAPSTONE\\FingerjetHelper\\FingerjetHelper\\FingerjetHelper.csproj",
+      "warningLevel": 1,
+      "filePath": "C:\\Users\\jcarl\\OneDrive\\Desktop\\CAPSTONE\\FingerjetHelper\\FingerjetHelper\\FingerjetHelper.csproj",
+      "libraryId": "SixLabors.ImageSharp",
+      "targetGraphs": [
+        "net10.0"
+      ]
+    },
+    {
+      "code": "NU1903",
+      "level": "Warning",
+      "message": "Package 'SixLabors.ImageSharp' 2.1.3 has a known high severity vulnerability, https://github.com/advisories/GHSA-65x7-c272-7g7r",
+      "projectPath": "C:\\Users\\jcarl\\OneDrive\\Desktop\\CAPSTONE\\FingerjetHelper\\FingerjetHelper\\FingerjetHelper.csproj",
+      "warningLevel": 1,
+      "filePath": "C:\\Users\\jcarl\\OneDrive\\Desktop\\CAPSTONE\\FingerjetHelper\\FingerjetHelper\\FingerjetHelper.csproj",
+      "libraryId": "SixLabors.ImageSharp",
+      "targetGraphs": [
+        "net10.0"
+      ]
+    },
+    {
+      "code": "NU1902",
+      "level": "Warning",
+      "message": "Package 'SixLabors.ImageSharp' 2.1.3 has a known moderate severity vulnerability, https://github.com/advisories/GHSA-g85r-6x2q-45w7",
+      "projectPath": "C:\\Users\\jcarl\\OneDrive\\Desktop\\CAPSTONE\\FingerjetHelper\\FingerjetHelper\\FingerjetHelper.csproj",
+      "warningLevel": 1,
+      "filePath": "C:\\Users\\jcarl\\OneDrive\\Desktop\\CAPSTONE\\FingerjetHelper\\FingerjetHelper\\FingerjetHelper.csproj",
+      "libraryId": "SixLabors.ImageSharp",
+      "targetGraphs": [
+        "net10.0"
+      ]
+    },
+    {
+      "code": "NU1902",
+      "level": "Warning",
+      "message": "Package 'SixLabors.ImageSharp' 2.1.3 has a known moderate severity vulnerability, https://github.com/advisories/GHSA-qxrv-gp6x-rc23",
+      "projectPath": "C:\\Users\\jcarl\\OneDrive\\Desktop\\CAPSTONE\\FingerjetHelper\\FingerjetHelper\\FingerjetHelper.csproj",
+      "warningLevel": 1,
+      "filePath": "C:\\Users\\jcarl\\OneDrive\\Desktop\\CAPSTONE\\FingerjetHelper\\FingerjetHelper\\FingerjetHelper.csproj",
+      "libraryId": "SixLabors.ImageSharp",
+      "targetGraphs": [
+        "net10.0"
+      ]
+    },
+    {
+      "code": "NU1902",
+      "level": "Warning",
+      "message": "Package 'SixLabors.ImageSharp' 2.1.3 has a known moderate severity vulnerability, https://github.com/advisories/GHSA-rxmq-m78w-7wmc",
+      "projectPath": "C:\\Users\\jcarl\\OneDrive\\Desktop\\CAPSTONE\\FingerjetHelper\\FingerjetHelper\\FingerjetHelper.csproj",
+      "warningLevel": 1,
+      "filePath": "C:\\Users\\jcarl\\OneDrive\\Desktop\\CAPSTONE\\FingerjetHelper\\FingerjetHelper\\FingerjetHelper.csproj",
+      "libraryId": "SixLabors.ImageSharp",
+      "targetGraphs": [
+        "net10.0"
+      ]
+    }
+  ]
+}
